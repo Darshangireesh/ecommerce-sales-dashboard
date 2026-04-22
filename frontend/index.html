@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Sales Insights Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Authentication Overlay -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-box glass">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your dashboard</p>
+            <input type="text" id="auth-user" placeholder="Username" value="admin">
+            <input type="password" id="auth-pass" placeholder="Password" value="password">
+            <button id="login-btn" class="btn-primary">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Application Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar glass" id="sidebar">
+            <div class="brand">
+                <span class="logo-icon">📊</span>
+                <span class="logo-text">DataPulse</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="active"><a href="#" id="nav-dashboard">📱 Dashboard</a></li>
+                <li><a href="#" id="nav-reports">📄 Reports</a></li>
+            </ul>
+
+            <div class="bottom-nav">
+                <div class="setting-item">
+                    <span>Dark Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>Live Refresh</span>
+                    <label class="switch">
+                        <input type="checkbox" id="refresh-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="dashboard-content">
+            <!-- Header / Filters -->
+            <header class="topbar glass">
+                <div class="greeting">
+                    <h1>Sales Insights Dashboard</h1>
+                </div>
+                <div class="actions">
+                    <div class="filters">
+                        <input type="date" id="filter-start">
+                        <span class="separator">-</span>
+                        <input type="date" id="filter-end">
+                        
+                        <select id="filter-region">
+                            <option value="All">All Regions</option>
+                        </select>
+                        <select id="filter-category">
+                            <option value="All">All Categories</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="export-actions">
+                    <button class="btn btn-secondary" id="btn-report">📥 CSV</button>
+                    <button class="btn btn-primary" id="btn-pdf">📄 PDF</button>
+                </div>
+            </header>
+
+            <!-- KPI Cards -->
+            <section class="kpi-grid">
+                <div class="kpi-card glass">
+                    <div class="kpi-icon sales-icon">💰</div>
+                    <div class="kpi-info">
+                        <h3>Total Sales</h3>
+                        <p id="kpi-sales">$0</p>
+                    </div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon orders-icon">🛒</div>
+                    <div class="kpi-info">
+                        <h3>Total Orders</h3>
+                        <p id="kpi-orders">0</p>
+                    </div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon aov-icon">📈</div>
+                    <div class="kpi-info">
+                        <h3>Average Order Value</h3>
+                        <p id="kpi-aov">$0</p>
+                    </div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon profit-icon">💎</div>
+                    <div class="kpi-info">
+                        <h3>Total Profit</h3>
+                        <p id="kpi-profit">$0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Smart Insights Panel -->
+            <section class="insights-panel glass">
+                <div class="insights-header">
+                    <h3>💡 AI Business Insights</h3>
+                </div>
+                <ul class="insights-list" id="insights-list">
+                    <!-- Injected dynamically -->
+                    <li><span class="icon">⌛</span><span class="text">Loading insights...</span></li>
+                </ul>
+                <div class="insights-summary">
+                    <strong>Overall Summary:</strong>
+                    <p id="insights-summary-text">Analyzing dataset structure...</p>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-grid">
+                <div class="chart-container glass span-2">
+                    <h3>Monthly Sales Trend</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="monthlySalesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container glass">
+                    <h3>Sales by Region</h3>
+                    <div class="canvas-wrapper" style="height: 300px;">
+                        <canvas id="regionSalesChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container glass">
+                    <h3>Top 10 Products</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="topProductsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container glass">
+                    <h3>Sales by Category</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="categorySalesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container glass">
+                    <h3>Profit vs Discount</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="profitDiscountChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
